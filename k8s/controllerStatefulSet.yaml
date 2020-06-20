@@ -1,0 +1,59 @@
+#kind: StatefulSet
+#apiVersion: apps/v1
+#metadata:
+#  name: csi-shkm-controller
+#  namespace: kube-system
+#spec:
+#  serviceName: "csi-shkm"
+#  selector:
+#    matchLabels:
+#      app: csi-shkm-controller
+#  replicas: 1
+#  template:
+#    metadata:
+#      labels:
+#        app: csi-shkm-controller
+#        role: csi-shkm
+#    spec:
+#      priorityClassName: system-cluster-critical
+#      serviceAccount: csi-shkm-controller-sa
+#      containers:
+#        - name: csi-provisioner
+#          # csi-provisioner v1.5.0+ requires support for beta snapshots
+#          image: quay.io/k8scsi/csi-provisioner:v1.4.0
+#          args:
+#            - "--csi-address=$(ADDRESS)"
+#            - "--v=5"
+#          env:
+#            - name: ADDRESS
+#              value: /var/lib/csi/sockets/pluginproxy/csi.sock
+#          imagePullPolicy: "IfNotPresent"
+#          volumeMounts:
+#            - name: socket-dir
+#              mountPath: /var/lib/csi/sockets/pluginproxy/
+#        - name: csi-attacher
+#          image: quay.io/k8scsi/csi-attacher:v2.2.0
+#          args:
+#            - "--v=5"
+#            - "--csi-address=$(ADDRESS)"
+#          env:
+#            - name: ADDRESS
+#              value: /var/lib/csi/sockets/pluginproxy/csi.sock
+#          imagePullPolicy: "IfNotPresent"
+#          volumeMounts:
+#            - name: socket-dir
+#              mountPath: /var/lib/csi/sockets/pluginproxy/
+#        - name: csi-shkm-plugin
+#          image: kamatera/shkm-csi-plugin:dev
+#          args :
+#            - "--endpoint=$(CSI_ENDPOINT)"
+#            - "--controller"
+#          env:
+#            - name: CSI_ENDPOINT
+#              value: unix:///var/lib/csi/sockets/pluginproxy/csi.sock
+#          volumeMounts:
+#            - name: socket-dir
+#              mountPath: /var/lib/csi/sockets/pluginproxy/
+#      volumes:
+#        - name: socket-dir
+#          emptyDir: {}

@@ -1,0 +1,7 @@
+apiVersion: storage.k8s.io/v1beta1
+kind: CSIDriver
+metadata:
+  name: shbs.csi.kamatera.com
+spec:
+  attachRequired: false
+  podInfoOnMount: true
