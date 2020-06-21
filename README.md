@@ -21,16 +21,18 @@ curl -sL https://github.com/Kamatera/shell-script-csi-driver/raw/latest/k8s/rele
     | kubectl apply -f -
 ```
 
-You may need to add additional tools to the driver image, depending on the shell scripts you will use
+The main workload is deployed as a system critical DaemonSet in `kube-system` namespace with a privileged SYS_ADMIN container on the host network with bidirectional mount propagation - so that you can mount volumes inside the container that will persist to the hosting node.
 
-Build an image based on the shell-script-csi-driver docker, for example, to add bash:
+The mount / unmount scripts run from within this container, so you may need to add additional tools to the driver image, depending on the shell scripts you will use.
+
+To add additional tools, build an image based on the shell-script-csi-driver image, for example, to add bash:
 
 ```
 FROM kamatera/shkm-csi-plugin:0.0.1
 RUN apk --update add bash
 ```
 
-Publish the image, and patch the DaemonSet:
+Publish the image to your Docker repository, and patch the DaemonSet:
 
 ```
 NEW_IMAGE_NAME="my-repo/my-image:latest"
