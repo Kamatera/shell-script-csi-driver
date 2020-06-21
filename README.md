@@ -2,7 +2,11 @@
 
 This is a simple [Container Storage Interface](https://github.com/container-storage-interface/spec/blob/master/spec.md) driver which is based on mount / unmount shell scripts defined in the volume context.
 
-**Warning** driver may be insecure, depending on usage, as it depends on running shell scripts on the node, based on CSI driver volume context. 
+**Warning** driver may be insecure, depending on usage, as it depends on running shell scripts in a priveleged daemonset running on all cluster nodes.
+
+## How it works
+
+The driver implements the node plugin interface. It runs as a daemon on all cluster nodes and handles requests to mount/unmount volumes from the node. The request context must contain `mountScript` and `unmountScript` attributes containing shell scripts to handle the mount / unmount.
 
 ## Using with Kubernetes
 
