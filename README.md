@@ -121,3 +121,17 @@ spec:
       persistentVolumeClaim:
         claimName: test-shkm
 ```
+
+### Debugging
+
+Get the daemonset pod name running on each node:
+
+```
+kubectl -n kube-system get pods -l app=csi-shkm-node -o custom-columns=pod:.metadata.name,node:.spec.nodeName
+```
+
+Get logs:
+
+```
+kubectl -n kube-system logs -c csi-shkm-plugin POD_NAME
+```
