@@ -42,12 +42,18 @@ spec:
             - name: registration-dir
               mountPath: /registration/
         - name: csi-shkm-plugin
-          image: kamatera/shkm-csi-plugin:dev
+          image: ghcr.io/kamatera/shell-script-csi-driver:latest
           args :
             - "--endpoint=$(CSI_ENDPOINT)"
+            - "--node-id=$(KUBE_NODE_NAME)"
           env:
             - name: CSI_ENDPOINT
               value: unix:///csi/csi.sock
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
           securityContext:
             privileged: true
             capabilities:

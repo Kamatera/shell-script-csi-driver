@@ -1,0 +1,23 @@
+name: CI
+on:
+  push:
+jobs:
+  ci:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKER_SERVER: "ghcr.io"
+        DOCKER_IMAGE: kamatera/shell-script-csi-driver
+      run: |
+        LDFLAGS="-X kamatera/shell-script-csi-driver/driver.version=${GITHUB_SHA} -X kamatera/shell-script-csi-driver/driver.commit=${GITHUB_SHA} -X kamatera/shell-script-csi-driver/driver.gitTreeState=clean" &&\
+        CGO_ENABLED=0 go build -ldflags "${LDFLAGS}" &&\
+        docker pull "${DOCKER_SERVER}/${DOCKER_IMAGE}:latest" &&\
+        docker build --cache-from "${DOCKER_SERVER}/${DOCKER_IMAGE}:latest" -t "${DOCKER_SERVER}/${DOCKER_IMAGE}:${GITHUB_SHA}" . &&\
+        echo "${DOCKER_PASSWORD}" | docker login "${DOCKER_SERVER}" -u "${DOCKER_USER}" --password-stdin &&\
+        docker push "${DOCKER_SERVER}/${DOCKER_IMAGE}:${GITHUB_SHA}" &&\
+        if [ "${GITHUB_REF}" == "refs/heads/latest" ]; then
+          docker tag "${DOCKER_SERVER}/${DOCKER_IMAGE}:${GITHUB_SHA}" "${DOCKER_SERVER}/${DOCKER_IMAGE}:latest"
+        fi

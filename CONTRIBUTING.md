@@ -63,7 +63,7 @@ else
 fi
 LDFLAGS="-X kamatera/shell-script-csi-driver/driver.version=${VERSION} -X kamatera/shell-script-csi-driver/driver.commit=${COMMIT} -X kamatera/shell-script-csi-driver/driver.gitTreeState=${GIT_TREE_STATE}"
 CGO_ENABLED=0 go build -ldflags "${LDFLAGS}" &&\
-docker build -t kamatera/shkm-csi-plugin:dev .
+docker build -t ghcr.io/kamatera/shell-script-csi-driver:latest .
 ```
 
 To force update of existing deployment, delete existing objects first:

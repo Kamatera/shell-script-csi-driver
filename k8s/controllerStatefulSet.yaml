@@ -44,7 +44,7 @@
 #            - name: socket-dir
 #              mountPath: /var/lib/csi/sockets/pluginproxy/
 #        - name: csi-shkm-plugin
-#          image: kamatera/shkm-csi-plugin:dev
+#          image: ghcr.io/kamatera/shell-script-csi-driver:latest
 #          args :
 #            - "--endpoint=$(CSI_ENDPOINT)"
 #            - "--controller"

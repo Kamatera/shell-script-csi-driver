@@ -67,7 +67,7 @@ func GetTreeState() string {
 	return gitTreeState
 }
 
-func NewDriver(ep string, driverName string, workdir string) (*Driver, error) {
+func NewDriver(ep string, driverName string, workdir string, nodeId string) (*Driver, error) {
 	if driverName == "" {
 		driverName = DefaultDriverName
 	}
@@ -83,6 +83,7 @@ func NewDriver(ep string, driverName string, workdir string) (*Driver, error) {
 	return &Driver{
 		name:                  driverName,
 		publishInfoVolumeName: driverName + "/volume-name",
+		hostID: nodeId,
 
 		endpoint:  ep,
 		log:       log,

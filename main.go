@@ -18,6 +18,7 @@ func main() {
 		driverName = flag.String("driver-name", driver.DefaultDriverName, "Name for the driver")
 		version    = flag.Bool("version", false, "Print the version and exit.")
 		workdir    = flag.String("workdir", "/var/run/kamatera/shell-script-csi-driver", "Workdir for runtime files")
+		nodeId     = flag.String("node-id", "", "The Node ID")
 	)
 	flag.Parse()
 
@@ -26,7 +27,12 @@ func main() {
 		os.Exit(0)
 	}
 
-	drv, err := driver.NewDriver(*endpoint, *driverName, *workdir)
+	if len(*nodeId) < 1 {
+		fmt.Println("node-id is required")
+		os.Exit(1)
+	}
+
+	drv, err := driver.NewDriver(*endpoint, *driverName, *workdir, *nodeId)
 	if err != nil {
 		log.Fatalln(err)
 	}

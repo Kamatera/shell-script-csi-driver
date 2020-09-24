@@ -28,7 +28,7 @@ The mount / unmount scripts run from within this container, so you may need to a
 To add additional tools, build an image based on the shell-script-csi-driver image, for example, to add bash:
 
 ```
-FROM kamatera/shkm-csi-plugin:0.0.1
+FROM ghcr.io/kamatera/shell-script-csi-driver:latest
 RUN apk --update add bash
 ```
 
